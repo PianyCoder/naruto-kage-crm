@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package shinobi.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/PianyCoder/naruto-kage-crm/shinobi-service/pkg/api/generated/shinobi/v1;shinobiv1";
+
+// ShinobiService — gRPC API сервиса Shinobi для внутренних потребителей (Dispatch).
+service ShinobiService {
+    // GetAvailableShinobi — возвращает шиноби, доступных для назначения на миссию.
+    rpc GetAvailableShinobi(GetAvailableShinobisRequest) returns (GetAvailableShinobisResponse);
+    // ReserveShinobi — резервирует шиноби под собираемую команду.
+    rpc ReserveShinobi(ReserveShinobiRequest) returns (ReserveShinobiResponse);
+}
+
+// GetAvailableShinobisRequest — запрос списка доступных шиноби.
+message GetAvailableShinobisRequest {}
+
+// GetAvailableShinobisResponse — данные шиноби, доступных для назначения.
+message GetAvailableShinobisResponse {
+    repeated Shinobi shinobi = 1;
+}
+
+// Shinobi - информации об одном, готовом для назначения, шиноби.
+message Shinobi {
+    // Идентификатор шиноби.
+    int64 id = 1;
+    // Имя.
+    string name = 2;
+    // Название клана.
+    string clan = 3;
+    // Идентификатор наставника.
+    optional int64 sensei_id = 4;
+    // Принадлежность к постоянной команде.
+    optional int64 team_number = 5;
+    // Текущий ранг.
+    ShinobiRank rank = 6;
+    // Статистика завершённых миссий по рангам.
+    CompletedMissions completed_missions = 7;
+    // Текущий статус жизненного цикла.
+    ShinobiStatus status = 8;
+
+    // Уровень владения тайдзюцу.
+    JutsuLevel taijutsu_level = 9;
+    // Уровень владения ниндзюцу.
+    JutsuLevel ninjutsu_level = 10;
+    // Уровень владения гендзюцу.
+    JutsuLevel genjutsu_level = 11;
+
+    // Освоенные стихии чакры.
+    repeated Elemental elementals = 12;
+    // Особые навыки.
+    repeated SpecialSkill special_skills = 13;
+    // Наследственная способность; отсутствует, если нет.
+    optional string kekkei_genkai = 14;
+
+    // Когда установлен текущий статус.
+    google.protobuf.Timestamp status_changed_at = 15;
+}
+
+// ShinobiRank — ранг шиноби.
+enum ShinobiRank {
+    // Ранг не задан.
+    SHINOBI_RANK_UNSPECIFIED = 0;
+    // Генин — младший ранг.
+    SHINOBI_RANK_GENIN = 1;
+    // Чунин — средний ранг.
+    SHINOBI_RANK_CHUUNIN = 2;
+    // Дзёнин — старший ранг.
+    SHINOBI_RANK_JOUNIN = 3;
+    // АНБУ — спецподразделение.
+    SHINOBI_RANK_ANBU = 4;
+    // Каге — глава деревни.
+    SHINOBI_RANK_KAGE = 5;
+}
+
+// CompletedMissions — счётчики завершённых миссий по рангам.
+message CompletedMissions {
+    // Число завершённых миссий ранга S.
+    int32 missions_rank_s = 1;
+    // Число завершённых миссий ранга A.
+    int32 missions_rank_a = 2;
+    // Число завершённых миссий ранга B.
+    int32 missions_rank_b = 3;
+    // Число завершённых миссий ранга C.
+    int32 missions_rank_c = 4;
+    // Число завершённых миссий ранга D.
+    int32 missions_rank_d = 5;
+}
+
+// ShinobiStatus — статус жизненного цикла шиноби.
+enum ShinobiStatus {
+    // Статус не задан.
+    SHINOBI_STATUS_UNSPECIFIED = 0;
+    // Доступен для назначения на миссию.
+    SHINOBI_STATUS_AVAILABLE = 1;
+    // Зарезервирован при сборе команды.
+    SHINOBI_STATUS_RESERVED = 2;
+    // Находится на миссии.
+    SHINOBI_STATUS_ON_MISSION = 3;
+    // Ранен, назначению не подлежит.
+    SHINOBI_STATUS_INJURED = 4;
+    // В отпуске.
+    SHINOBI_STATUS_ON_LEAVE = 5;
+    // Списан по состоянию здоровья.
+    SHINOBI_STATUS_DISABLED = 6;
+    // Погиб.
+    SHINOBI_STATUS_DEAD = 7;
+    // Дезертир; терминальный статус.
+    SHINOBI_STATUS_NUKENIN = 8;
+}
+
+// JutsuLevel — уровень владения дзюцу.
+enum JutsuLevel {
+    // Уровень не задан.
+    JUTSU_LEVEL_UNSPECIFIED = 0;
+    // Уровень 1 (низший).
+    JUTSU_LEVEL_ONE = 1;
+    // Уровень 2.
+    JUTSU_LEVEL_TWO = 2;
+    // Уровень 3.
+    JUTSU_LEVEL_THREE = 3;
+    // Уровень 4.
+    JUTSU_LEVEL_FOUR = 4;
+    // Уровень 5 (высший).
+    JUTSU_LEVEL_FIVE = 5;
+}
+
+// Elemental — стихия чакры.
+enum Elemental {
+    // Стихия не задана.
+    ELEMENTAL_UNSPECIFIED = 0;
+    // Огонь.
+    ELEMENTAL_KATON = 1;
+    // Ветер.
+    ELEMENTAL_FUTON = 2;
+    // Молния.
+    ELEMENTAL_RAITON = 3;
+    // Земля.
+    ELEMENTAL_DOTON = 4;
+    // Вода.
+    ELEMENTAL_SUITON = 5;
+}
+
+// SpecialSkill — особый навык шиноби.
+enum SpecialSkill {
+    // Навык не задан.
+    SPECIAL_SKILL_UNSPECIFIED = 0;
+    // Медицинские техники.
+    SPECIAL_SKILL_MEDICINE = 1;
+    // Владение оружием.
+    SPECIAL_SKILL_WEAPON_USER = 2;
+    // Способность к полёту.
+    SPECIAL_SKILL_FLYING = 3;
+}
+
+// ReserveShinobiRequest — запрос на резервирование шиноби под команду.
+message ReserveShinobiRequest {
+    // Идентификаторы резервируемых шиноби.
+    repeated int64 shinobi_ids = 1;
+}
+
+// ReserveShinobiResponse — результат резервирования.
+message ReserveShinobiResponse {
+    // Идентификаторы шиноби, которых не удалось зарезервировать.
+    repeated int64 conflicted_shinobi_ids = 1;
+}
