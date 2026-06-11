@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package query.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/PianyCoder/naruto-kage-crm/shinobi-service/pkg/api/generated/query/v1;query";
+
+// QueryService — gRPC API сервиса Shinobi для внутренних потребителей шиноби-менеджмента.
+service QueryService {}

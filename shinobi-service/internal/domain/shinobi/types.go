@@ -82,16 +82,16 @@ type CompletedMissions struct {
 	MissionsRankD int
 }
 
-// Kekkeigenkai — наследственная способность (особый тип способности).
-type Kekkeigenkai string
+// KekkeiGenkai — наследственная способность (особый тип способности).
+type KekkeiGenkai string
 
 const (
 	// Sharingan — додзюцу клана Учиха.
-	Sharingan Kekkeigenkai = "sharingan"
+	Sharingan KekkeiGenkai = "sharingan"
 	// Byakugan — додзюцу клана Хьюга.
-	Byakugan Kekkeigenkai = "byakugan"
+	Byakugan KekkeiGenkai = "byakugan"
 	// MixElemental — комбинированная стихийная способность.
-	MixElemental Kekkeigenkai = "mixElemental"
+	MixElemental KekkeiGenkai = "mixElemental"
 )
 
 // SpecialSkill — особый навык шиноби; используется при подборе отряда (FR-CAP2).
@@ -136,6 +136,8 @@ type Shinobi struct {
 	Clan string
 	// SenseiID — идентификатор наставника; nil, если наставника нет.
 	SenseiID *int
+	// TeamID - принадлежность к постоянной команде; nil, если команды нет.
+	TeamNumber *int
 
 	// Rank — текущий ранг.
 	Rank ShinobiRank
@@ -156,8 +158,8 @@ type Shinobi struct {
 	Elementals []Elemental
 	// SpecialSkills — особые навыки.
 	SpecialSkills []SpecialSkill
-	// Kekkeigenkai — наследственная способность; nil, если нет.
-	Kekkeigenkai *Kekkeigenkai
+	// KekkeigGnkai — наследственная способность; nil, если нет.
+	KekkeiGenkai *KekkeiGenkai
 
 	// CreatedAt — когда запись создана.
 	CreatedAt time.Time
